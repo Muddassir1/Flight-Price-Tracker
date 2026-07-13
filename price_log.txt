@@ -1,3 +1,6 @@
 [2026-07-13T13:18:49.997786+00:00] KHI-ISB-2026-07-13: lowest price found = 25147 (Fly Jinnah) (first recorded run).
 [2026-07-13T13:18:51.578199+00:00] KHI-ISB-2026-07-14: lowest price found = 23500 (Airblue) (first recorded run).
 [2026-07-13T13:18:52.314351+00:00] KHI-ISB-2026-07-15: lowest price found = 23500 (Airblue) (first recorded run).
+[2026-07-13T17:32:41.830374+00:00] KHI-ISB-2026-07-13: received 1 event(s) but found no flight prices. Sastaticket's response structure may have changed — update extract_flights() if this keeps happening.
+[2026-07-13T17:32:44.770632+00:00] KHI-ISB-2026-07-14: lowest price found = 23500 (Airblue) (previous: 2400, rose by 21100).
+[2026-07-13T17:32:45.484467+00:00] KHI-ISB-2026-07-15: lowest price found = 23500 (Airblue) (previous: 2400, rose by 21100).
