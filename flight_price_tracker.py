@@ -1,11 +1,13 @@
 """
 Sastaticket Flight Price Logger
 --------------------------------
-Calls the (unofficial, undocumented) Sastaticket flight search endpoint,
-reads the Server-Sent Events (SSE) stream it returns, decodes each event
-(base64 + zlib-compressed JSON), and logs the cheapest flight found —
-price and airline name — to a local price history so you can track
-changes over time. Optionally emails you when the price drops.
+Calls the (unofficial, undocumented) Sastaticket flight search endpoint
+for today plus the next few days (no hardcoded date — computed fresh
+every run), reads the Server-Sent Events (SSE) stream it returns,
+decodes each event (base64 + zlib-compressed JSON), and logs the
+cheapest flight found per date — price and airline name — to a local
+price history so you can track changes over time. Optionally emails you
+when any of those dates' prices drop.
 
 IMPORTANT NOTES:
 - This hits an internal endpoint used by sastaticket.pk's own website.
@@ -18,7 +20,7 @@ IMPORTANT NOTES:
 USAGE:
     pip install requests
     python flight_price_tracker.py
-    (edit the CONFIG section below to change route/date)
+    (edit ORIGIN/DESTINATION/DATE_RANGE_DAYS in the CONFIG section below)
 
 Re-run this daily (manually, via cron, or Task Scheduler) to build up a
 price history in price_history.json and price_log.txt.
@@ -32,7 +34,7 @@ import base64
 import zlib
 import smtplib
 from email.mime.text import MIMEText
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 import requests
 
@@ -41,12 +43,20 @@ import requests
 # ============================================================
 ORIGIN = "KHI"
 DESTINATION = "ISB"
-DEPARTURE_DATE = "2026-08-15"   # YYYY-MM-DD
 CABIN_CLASS_CODE = "Y"
 CABIN_CLASS_LABEL = "Economy"
 NUM_ADULT = 1
 NUM_CHILD = 0
 NUM_INFANT = 0
+
+# Instead of a fixed date, this searches "today" plus the next N-1 days,
+# computed fresh on every run — so you never have to edit a hardcoded date.
+DATE_RANGE_DAYS = 3   # e.g. 3 = today, tomorrow, day after tomorrow
+
+# "Today" is computed using this UTC offset so it matches your local day
+# even when the script runs on a server in a different timezone (like
+# GitHub Actions, which runs in UTC). 5 = Pakistan Standard Time (PKT).
+LOCAL_UTC_OFFSET_HOURS = 5
 
 # This looked like a persistent per-browser analytics id in the sample
 # payload you captured. Keeping it fixed is probably fine for a personal
@@ -63,8 +73,8 @@ LOG_FILE = "price_log.txt"
 # never hardcode a real password in this file. If using Gmail, EMAIL_PASSWORD
 # must be a 16-character "App Password" (Google Account -> Security ->
 # 2-Step Verification -> App passwords), not your normal login password.
-SMTP_SERVER = os.environ.get("SMTP_SERVER", "smtp.gmail.com")
-SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_SERVER = os.environ.get("SMTP_SERVER") or "smtp.gmail.com"
+SMTP_PORT = int(os.environ.get("SMTP_PORT") or "587")
 EMAIL_SENDER = os.environ.get("EMAIL_SENDER")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_RECIPIENT = os.environ.get("EMAIL_RECIPIENT")
@@ -76,13 +86,30 @@ NOTIFY_ONLY_ON_DROP = True
 # ============================================================
 
 
-def build_payload():
+def now_pkt_str():
+    """Current time formatted in PKT (Pakistan Standard Time), e.g. '2026-07-13 04:48 PM PKT'."""
+    pkt_now = datetime.now(timezone.utc) + timedelta(hours=LOCAL_UTC_OFFSET_HOURS)
+    return pkt_now.strftime("%Y-%m-%d %I:%M %p PKT")
+
+
+def get_search_dates():
+    """
+    Returns a list of YYYY-MM-DD strings: today (in the local timezone
+    defined by LOCAL_UTC_OFFSET_HOURS) through today + DATE_RANGE_DAYS - 1.
+    Computed fresh every run, so nothing is ever hardcoded.
+    """
+    local_now = datetime.now(timezone.utc) + timedelta(hours=LOCAL_UTC_OFFSET_HOURS)
+    today = local_now.date()
+    return [(today + timedelta(days=i)).isoformat() for i in range(DATE_RANGE_DAYS)]
+
+
+def build_payload(departure_date):
     return {
         "legs": [
             {
                 "origin": [ORIGIN],
                 "destination": [DESTINATION],
-                "departure_date": DEPARTURE_DATE,
+                "departure_date": departure_date,
             }
         ],
         "route_type": "ONEWAY",
@@ -102,8 +129,8 @@ def build_payload():
     }
 
 
-def route_key():
-    return f"{ORIGIN}-{DESTINATION}-{DEPARTURE_DATE}"
+def route_key(departure_date):
+    return f"{ORIGIN}-{DESTINATION}-{departure_date}"
 
 
 def fetch_sse_events(payload):
@@ -269,93 +296,44 @@ def send_email(subject, body):
             server.starttls()
             server.login(EMAIL_SENDER, EMAIL_PASSWORD)
             server.sendmail(EMAIL_SENDER, [EMAIL_RECIPIENT], msg.as_string())
+        append_log(f"[email] Sent notification to {EMAIL_RECIPIENT}: {subject}")
     except Exception as e:
         append_log(f"[email] ERROR sending notification: {e}")
 
 
-def main():
-    print(f"Searching {ORIGIN} -> {DESTINATION} on {DEPARTURE_DATE} ...")
-    payload = build_payload()
+def process_date(departure_date):
+    """
+    Runs a full search + compare + history-update cycle for a single
+    departure date. Returns a dict describing what happened, so main()
+    can aggregate results across all searched dates into one email.
+    """
+    print(f"Searching {ORIGIN} -> {DESTINATION} on {departure_date} ...")
+    payload = build_payload(departure_date)
+    timestamp_iso = datetime.now(timezone.utc).isoformat()
+    key = route_key(departure_date)
 
     try:
         events = fetch_sse_events(payload)
     except requests.exceptions.RequestException as e:
-        append_log(
-            f"[{datetime.now(timezone.utc).isoformat()}] ERROR fetching data: {e}"
-        )
-        sys.exit(1)
+        append_log(f"[{timestamp_iso}] {key}: ERROR fetching data: {e}")
+        return {"key": key, "date": departure_date, "status": "error", "error": str(e)}
 
     if not events:
         append_log(
-            f"[{datetime.now(timezone.utc).isoformat()}] No events received. "
-            f"The endpoint may require different headers/auth than assumed."
+            f"[{timestamp_iso}] {key}: No events received. The endpoint may "
+            f"require different headers/auth than assumed."
         )
-        sys.exit(1)
+        return {"key": key, "date": departure_date, "status": "no_events"}
 
     decoded_events = [decode_event(ev) for ev in events]
-
     all_flights = []
     for ev in decoded_events:
         all_flights.extend(extract_flights(ev))
 
-    timestamp_iso = datetime.now(timezone.utc).isoformat()
-    key = route_key()
     history = load_history()
     history.setdefault(key, [])
 
-    if all_flights:
-        cheapest = min(all_flights, key=lambda f: f["price"])
-        history[key].append(
-            {
-                "timestamp": timestamp_iso,
-                "min_price": cheapest["price"],
-                "airline": cheapest["airline"],
-                "num_events": len(events),
-            }
-        )
-        save_history(history)
-
-        prev_entries = history[key][:-1]
-        if prev_entries:
-            prev_price = prev_entries[-1]["min_price"]
-            diff = cheapest["price"] - prev_price
-            trend = "DROPPED" if diff < 0 else ("rose" if diff > 0 else "unchanged")
-            append_log(
-                f"[{timestamp_iso}] {key}: lowest price found = {cheapest['price']} "
-                f"({cheapest['airline']}) (previous: {prev_price}, {trend} by {abs(diff)})."
-            )
-
-            if diff < 0:
-                send_email(
-                    subject=f"✈️ Price drop: {key}",
-                    body=(
-                        f"Price drop on {key}!\n\n"
-                        f"{cheapest['airline']}: {prev_price:,.0f} -> {cheapest['price']:,.0f} "
-                        f"(down {abs(diff):,.0f})"
-                    ),
-                )
-            elif not NOTIFY_ONLY_ON_DROP:
-                send_email(
-                    subject=f"Flight price update: {key}",
-                    body=(
-                        f"{key}: {cheapest['airline']} at {cheapest['price']:,.0f} "
-                        f"({trend}, previous {prev_price:,.0f})"
-                    ),
-                )
-        else:
-            append_log(
-                f"[{timestamp_iso}] {key}: lowest price found = {cheapest['price']} "
-                f"({cheapest['airline']}) (first recorded run)."
-            )
-            if not NOTIFY_ONLY_ON_DROP:
-                send_email(
-                    subject=f"Started tracking: {key}",
-                    body=(
-                        f"Started tracking {key}.\n"
-                        f"Current lowest: {cheapest['airline']} at {cheapest['price']:,.0f}"
-                    ),
-                )
-    else:
+    if not all_flights:
         history[key].append(
             {"timestamp": timestamp_iso, "min_price": None, "airline": None, "num_events": len(events)}
         )
@@ -364,6 +342,81 @@ def main():
             f"[{timestamp_iso}] {key}: received {len(events)} event(s) but found no "
             f"flight prices. Sastaticket's response structure may have changed — "
             f"update extract_flights() if this keeps happening."
+        )
+        return {"key": key, "date": departure_date, "status": "no_prices"}
+
+    cheapest = min(all_flights, key=lambda f: f["price"])
+    history[key].append(
+        {
+            "timestamp": timestamp_iso,
+            "min_price": cheapest["price"],
+            "airline": cheapest["airline"],
+            "num_events": len(events),
+        }
+    )
+    save_history(history)
+
+    prev_entries = history[key][:-1]
+    if not prev_entries:
+        append_log(
+            f"[{timestamp_iso}] {key}: lowest price found = {cheapest['price']} "
+            f"({cheapest['airline']}) (first recorded run)."
+        )
+        return {
+            "key": key, "date": departure_date, "status": "first_check",
+            "price": cheapest["price"], "airline": cheapest["airline"],
+        }
+
+    prev_price = prev_entries[-1]["min_price"]
+    diff = cheapest["price"] - prev_price
+    trend = "DROPPED" if diff < 0 else ("rose" if diff > 0 else "unchanged")
+    append_log(
+        f"[{timestamp_iso}] {key}: lowest price found = {cheapest['price']} "
+        f"({cheapest['airline']}) (previous: {prev_price}, {trend} by {abs(diff)})."
+    )
+    return {
+        "key": key, "date": departure_date, "status": "compared",
+        "price": cheapest["price"], "airline": cheapest["airline"],
+        "prev_price": prev_price, "diff": diff, "trend": trend,
+    }
+
+
+def main():
+    dates = get_search_dates()
+    results = [process_date(d) for d in dates]
+    checked_at = now_pkt_str()
+
+    drops = [r for r in results if r.get("status") == "compared" and r["diff"] < 0]
+
+    if drops:
+        lines = []
+        for r in drops:
+            lines.append(
+                f"{r['date']}: {r['airline']} {r['prev_price']:,.0f} -> {r['price']:,.0f} "
+                f"(down {abs(r['diff']):,.0f})"
+            )
+        send_email(
+            subject=f"✈️ Price drop: {ORIGIN}-{DESTINATION} ({len(drops)} date(s))",
+            body=(
+                f"Checked at {checked_at}\n\n"
+                f"Price drop(s) detected:\n\n" + "\n".join(lines)
+            ),
+        )
+    elif not NOTIFY_ONLY_ON_DROP:
+        lines = []
+        for r in results:
+            if r.get("status") == "compared":
+                lines.append(
+                    f"{r['date']}: {r['airline']} at {r['price']:,.0f} "
+                    f"({r['trend']}, previous {r['prev_price']:,.0f})"
+                )
+            elif r.get("status") == "first_check":
+                lines.append(f"{r['date']}: {r['airline']} at {r['price']:,.0f} (first check)")
+            else:
+                lines.append(f"{r['date']}: no price data ({r.get('status')})")
+        send_email(
+            subject=f"Flight price update: {ORIGIN}-{DESTINATION}",
+            body=f"Checked at {checked_at}\n\n" + "\n".join(lines),
         )
 
 
