@@ -16,3 +16,6 @@
 [2026-07-13T22:31:06.743494+00:00] KHI-ISB-2026-07-14: lowest price found = 23950 (AirSial) (previous: 23950, unchanged by 0).
 [2026-07-13T22:31:07.645791+00:00] KHI-ISB-2026-07-15: lowest price found = 23500 (Airblue) (previous: 23500, unchanged by 0).
 [2026-07-13T22:31:11.389252+00:00] KHI-ISB-2026-07-16: lowest price found = 25000 (Airblue) (previous: 25000, unchanged by 0).
+[2026-07-13T23:28:38.523906+00:00] KHI-ISB-2026-07-14: lowest price found = 23950 (AirSial) (previous: 23950, unchanged by 0).
+[2026-07-13T23:28:39.334633+00:00] KHI-ISB-2026-07-15: lowest price found = 27050 (AirSial) (previous: 23500, rose by 3550).
+[2026-07-13T23:28:40.096771+00:00] KHI-ISB-2026-07-16: lowest price found = 25000 (Airblue) (previous: 25000, unchanged by 0).
