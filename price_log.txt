@@ -7,3 +7,6 @@
 [2026-07-13T18:58:45.524269+00:00] KHI-ISB-2026-07-13: received 1 event(s) but found no flight prices. Sastaticket's response structure may have changed — update extract_flights() if this keeps happening.
 [2026-07-13T18:58:48.993889+00:00] KHI-ISB-2026-07-14: lowest price found = 23950 (AirSial) (previous: 23500, rose by 450).
 [2026-07-13T18:58:49.983641+00:00] KHI-ISB-2026-07-15: lowest price found = 23500 (Airblue) (previous: 23500, unchanged by 0).
+[2026-07-13T20:21:18.044735+00:00] KHI-ISB-2026-07-14: lowest price found = 23950 (AirSial) (previous: 23950, unchanged by 0).
+[2026-07-13T20:21:21.674323+00:00] KHI-ISB-2026-07-15: lowest price found = 23500 (Airblue) (previous: 23500, unchanged by 0).
+[2026-07-13T20:21:23.173256+00:00] KHI-ISB-2026-07-16: lowest price found = 25000 (Airblue) (first recorded run).
