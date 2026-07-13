@@ -4,7 +4,7 @@ on:
   schedule:
     # Runs at 06:00 UTC every day (= 11:00 AM PKT). Edit the cron below to
     # change the time. Cron is always in UTC regardless of your timezone.
-    - cron: "0 6 * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch: {}   # lets you also trigger it manually from the Actions tab
 
 jobs:
