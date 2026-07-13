@@ -43,6 +43,12 @@
       "min_price": 23950,
       "airline": "AirSial",
       "num_events": 4
+    },
+    {
+      "timestamp": "2026-07-13T21:30:46.133701+00:00",
+      "min_price": 23950,
+      "airline": "AirSial",
+      "num_events": 1
     }
   ],
   "KHI-ISB-2026-07-15": [
@@ -69,11 +75,23 @@
       "min_price": 23500,
       "airline": "Airblue",
       "num_events": 1
+    },
+    {
+      "timestamp": "2026-07-13T21:30:47.207394+00:00",
+      "min_price": 23500,
+      "airline": "Airblue",
+      "num_events": 5
     }
   ],
   "KHI-ISB-2026-07-16": [
     {
       "timestamp": "2026-07-13T20:21:23.173256+00:00",
+      "min_price": 25000,
+      "airline": "Airblue",
+      "num_events": 1
+    },
+    {
+      "timestamp": "2026-07-13T21:30:48.703201+00:00",
       "min_price": 25000,
       "airline": "Airblue",
       "num_events": 1
