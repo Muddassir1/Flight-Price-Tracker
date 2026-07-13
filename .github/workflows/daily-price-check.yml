@@ -1,1 +1,40 @@
+name: Daily flight price check
 
+on:
+  schedule:
+    # Runs at 06:00 UTC every day (= 11:00 AM PKT). Edit the cron below to
+    # change the time. Cron is always in UTC regardless of your timezone.
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}   # lets you also trigger it manually from the Actions tab
+
+jobs:
+  check-price:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run price tracker
+        env:
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
+        run: python flight_price_tracker.py
+
+      - name: Commit updated price history
+        run: |
+          git config user.name "price-tracker-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add price_history.json price_log.txt
+          git diff --quiet --cached || git commit -m "Daily price check $(date -u +'%Y-%m-%d')"
+          git push
