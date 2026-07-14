@@ -243,6 +243,12 @@
       "min_price": 22210,
       "airline": "AirSial",
       "num_events": 1
+    },
+    {
+      "timestamp": "2026-07-14T23:28:09.341168+00:00",
+      "min_price": 22210,
+      "airline": "AirSial",
+      "num_events": 1
     }
   ],
   "KHI-ISB-2026-07-16": [
@@ -347,6 +353,12 @@
       "min_price": 22430,
       "airline": "SouthAir",
       "num_events": 1
+    },
+    {
+      "timestamp": "2026-07-14T23:28:10.101986+00:00",
+      "min_price": 22430,
+      "airline": "SouthAir",
+      "num_events": 1
     }
   ],
   "KHI-ISB-2026-07-17": [
@@ -364,6 +376,12 @@
     },
     {
       "timestamp": "2026-07-14T22:34:37.124246+00:00",
+      "min_price": 22430,
+      "airline": "SouthAir",
+      "num_events": 5
+    },
+    {
+      "timestamp": "2026-07-14T23:28:10.708764+00:00",
       "min_price": 22430,
       "airline": "SouthAir",
       "num_events": 5
