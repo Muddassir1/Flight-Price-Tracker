@@ -115,6 +115,12 @@
       "min_price": null,
       "airline": null,
       "num_events": 1
+    },
+    {
+      "timestamp": "2026-07-14T18:43:09.658052+00:00",
+      "min_price": null,
+      "airline": null,
+      "num_events": 1
     }
   ],
   "KHI-ISB-2026-07-15": [
@@ -213,6 +219,12 @@
       "min_price": 22210,
       "airline": "AirSial",
       "num_events": 1
+    },
+    {
+      "timestamp": "2026-07-14T18:43:10.538705+00:00",
+      "min_price": 23457,
+      "airline": "Fly Jinnah",
+      "num_events": 1
     }
   ],
   "KHI-ISB-2026-07-16": [
@@ -293,6 +305,12 @@
       "min_price": 18330,
       "airline": "SouthAir",
       "num_events": 1
+    },
+    {
+      "timestamp": "2026-07-14T18:43:11.315143+00:00",
+      "min_price": 18330,
+      "airline": "SouthAir",
+      "num_events": 5
     }
   ]
 }
