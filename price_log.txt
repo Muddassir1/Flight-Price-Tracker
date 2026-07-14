@@ -34,3 +34,7 @@
 [2026-07-14T08:52:46.355215+00:00] KHI-ISB-2026-07-14: lowest price found = 22898 (Fly Jinnah) (previous: 21590, rose by 1308).
 [2026-07-14T08:52:47.407512+00:00] KHI-ISB-2026-07-15: lowest price found = 25500 (Airblue) (previous: 25500, unchanged by 0).
 [2026-07-14T08:52:48.986556+00:00] KHI-ISB-2026-07-16: lowest price found = 25000 (Airblue) (previous: 18830, rose by 6170).
+[2026-07-14T10:53:45.053725+00:00] KHI-ISB-2026-07-14: lowest price found = 23321 (Fly Jinnah) (previous: 22898, rose by 423).
+[2026-07-14T10:53:46.388481+00:00] KHI-ISB-2026-07-15: lowest price found = 25500 (Airblue) (previous: 25500, unchanged by 0).
+[2026-07-14T10:53:47.450677+00:00] KHI-ISB-2026-07-16: lowest price found = 22430 (SouthAir) (previous: 25000, DROPPED by 2570).
+[email] Sent notification to muddassir.ah@gmail.com: ✈️ Price drop: KHI-ISB (1 date(s))
