@@ -23,3 +23,7 @@
 [2026-07-14T00:55:54.756471+00:00] KHI-ISB-2026-07-15: lowest price found = 25500 (Airblue) (previous: 27050, DROPPED by 1550).
 [2026-07-14T00:55:55.544804+00:00] KHI-ISB-2026-07-16: lowest price found = 25000 (Airblue) (previous: 25000, unchanged by 0).
 [email] Sent notification to muddassir.ah@gmail.com: ✈️ Price drop: KHI-ISB (1 date(s))
+[2026-07-14T04:10:34.655792+00:00] KHI-ISB-2026-07-14: lowest price found = 24570 (AirSial) (previous: 23950, rose by 620).
+[2026-07-14T04:10:35.991767+00:00] KHI-ISB-2026-07-15: lowest price found = 23500 (Airblue) (previous: 25500, DROPPED by 2000).
+[2026-07-14T04:10:36.572949+00:00] KHI-ISB-2026-07-16: lowest price found = 25000 (Airblue) (previous: 25000, unchanged by 0).
+[email] Sent notification to muddassir.ah@gmail.com: ✈️ Price drop: KHI-ISB (1 date(s))
