@@ -96,3 +96,7 @@
 [2026-07-15T16:40:28.136044+00:00] KHI-ISB-2026-07-15: received 1 event(s) but found no flight prices. Sastaticket's response structure may have changed — update extract_flights() if this keeps happening.
 [2026-07-15T16:40:29.493929+00:00] KHI-ISB-2026-07-16: lowest price found = 28000 (Airblue) (previous: 28000, unchanged by 0).
 [2026-07-15T16:40:30.532446+00:00] KHI-ISB-2026-07-17: lowest price found = 22930 (SouthAir) (previous: 22930, unchanged by 0).
+[2026-07-15T18:15:31.620939+00:00] KHI-ISB-2026-07-15: received 1 event(s) but found no flight prices. Sastaticket's response structure may have changed — update extract_flights() if this keeps happening.
+[2026-07-15T18:15:32.255328+00:00] KHI-ISB-2026-07-16: lowest price found = 22930 (SouthAir) (previous: 28000, DROPPED by 5070).
+[2026-07-15T18:15:32.945219+00:00] KHI-ISB-2026-07-17: lowest price found = 22930 (SouthAir) (previous: 22930, unchanged by 0).
+[email] Sent notification to muddassir.ah@gmail.com: ✈️ Price drop: KHI-ISB (1 date(s))

@@ -297,6 +297,12 @@
       "min_price": null,
       "airline": null,
       "num_events": 1
+    },
+    {
+      "timestamp": "2026-07-15T18:15:31.620939+00:00",
+      "min_price": null,
+      "airline": null,
+      "num_events": 1
     }
   ],
   "KHI-ISB-2026-07-16": [
@@ -455,6 +461,12 @@
       "min_price": 28000,
       "airline": "Airblue",
       "num_events": 2
+    },
+    {
+      "timestamp": "2026-07-15T18:15:32.255328+00:00",
+      "min_price": 22930,
+      "airline": "SouthAir",
+      "num_events": 1
     }
   ],
   "KHI-ISB-2026-07-17": [
@@ -529,6 +541,12 @@
       "min_price": 22930,
       "airline": "SouthAir",
       "num_events": 5
+    },
+    {
+      "timestamp": "2026-07-15T18:15:32.945219+00:00",
+      "min_price": 22930,
+      "airline": "SouthAir",
+      "num_events": 1
     }
   ]
 }
