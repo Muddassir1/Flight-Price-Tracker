@@ -279,6 +279,12 @@
       "min_price": 24871,
       "airline": "Fly Jinnah",
       "num_events": 4
+    },
+    {
+      "timestamp": "2026-07-15T12:54:32.563479+00:00",
+      "min_price": 31000,
+      "airline": "Airblue",
+      "num_events": 2
     }
   ],
   "KHI-ISB-2026-07-16": [
@@ -419,6 +425,12 @@
       "min_price": 22430,
       "airline": "SouthAir",
       "num_events": 1
+    },
+    {
+      "timestamp": "2026-07-15T12:54:33.438825+00:00",
+      "min_price": 22930,
+      "airline": "SouthAir",
+      "num_events": 1
     }
   ],
   "KHI-ISB-2026-07-17": [
@@ -475,6 +487,12 @@
       "min_price": 22430,
       "airline": "SouthAir",
       "num_events": 1
+    },
+    {
+      "timestamp": "2026-07-15T12:54:35.303046+00:00",
+      "min_price": 22930,
+      "airline": "SouthAir",
+      "num_events": 5
     }
   ]
 }
