@@ -137,3 +137,6 @@
 [2026-07-16T15:11:02.515494+00:00] KHI-ISB-2026-07-17: lowest price found = 20405 (SouthAir) (previous: 22930, DROPPED by 2525).
 [2026-07-16T15:11:03.200097+00:00] KHI-ISB-2026-07-18: lowest price found = 28885 (Fly Jinnah) (previous: 25797, rose by 3088).
 [email] Sent notification to muddassir.ah@gmail.com: ✈️ Price drop: KHI-ISB (1 date(s))
+[2026-07-16T16:51:04.842948+00:00] KHI-ISB-2026-07-16: received 1 event(s) but found no flight prices. Sastaticket's response structure may have changed — update extract_flights() if this keeps happening.
+[2026-07-16T16:51:07.661641+00:00] KHI-ISB-2026-07-17: lowest price found = 22930 (SouthAir) (previous: 20405, rose by 2525).
+[2026-07-16T16:51:08.624604+00:00] KHI-ISB-2026-07-18: lowest price found = 28885 (Fly Jinnah) (previous: 28885, unchanged by 0).
