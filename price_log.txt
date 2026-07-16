@@ -143,3 +143,6 @@
 [2026-07-16T18:13:47.863862+00:00] KHI-ISB-2026-07-16: received 1 event(s) but found no flight prices. Sastaticket's response structure may have changed — update extract_flights() if this keeps happening.
 [2026-07-16T18:13:49.644958+00:00] KHI-ISB-2026-07-17: lowest price found = 26550 (AirSial) (previous: 22930, rose by 3620).
 [2026-07-16T18:13:50.362726+00:00] KHI-ISB-2026-07-18: lowest price found = 28885 (Fly Jinnah) (previous: 28885, unchanged by 0).
+[2026-07-16T19:43:21.151963+00:00] KHI-ISB-2026-07-17: lowest price found = 28468 (Fly Jinnah) (previous: 26550, rose by 1918).
+[2026-07-16T19:43:22.349049+00:00] KHI-ISB-2026-07-18: lowest price found = 31510 (AirSial) (previous: 28885, rose by 2625).
+[2026-07-16T19:43:23.111909+00:00] KHI-ISB-2026-07-19: lowest price found = 25797 (Fly Jinnah) (first recorded run).
